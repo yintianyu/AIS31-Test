@@ -12,6 +12,7 @@ class Tester{
     public:
     void generate(int quantity);
     bool test0(int quantity);
+    bool test2();
 };
 
 #endif
