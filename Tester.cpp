@@ -4,6 +4,7 @@
 #include <random>
 #include <set>
 #include <cassert>
+#include <map>
 
 void Tester::generate(int quantity){
     std::random_device rd;
@@ -25,4 +26,16 @@ bool Tester::test0(int quantity){
         }
     }
     return true;
+}
+
+bool Tester::test2() {
+    std::map <char, int> m;
+    int squareAcc = 0;
+    for (int i = 0; i < 5000; i++) {
+        char idx = numbers[i] & 0xf;
+        ++m[idx];
+    }
+    for (const auto &e : m) {
+        squareAcc += e.first * e.first * e.second;
+    }
 }
