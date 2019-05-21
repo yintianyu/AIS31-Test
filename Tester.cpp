@@ -7,6 +7,7 @@
 #include <set>
 #include <cassert>
 #include <map>
+//#include <iostream>
 
 Tester::Tester():numbers(NULL){
     rndService.defineServer("random.irb.hr", 1227);
@@ -49,9 +50,11 @@ bool Tester::test2() {
         ++m[idx];
     }
     for (const auto &e : m) {
-        squareAcc += e.first * e.first * e.second;
+        //std::cout << e.first << " " << e.second << std::endl;
+        squareAcc += e.second * e.second;
     }
     float T2 = squareAcc * 16.0 / 5000.0 - 5000;
+    //std::cout << T2 << std::endl;
     if (T2 > 1.03 && T2 < 57.4) {
         return true;
     }
