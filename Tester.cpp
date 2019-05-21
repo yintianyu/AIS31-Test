@@ -53,7 +53,7 @@ void Tester::generate(int quantity){
     rndService.getInt64s(numbers, quantity);
 }
 
-bool Tester::test0(int quantity=65536){
+bool Tester::test0(int quantity){
     std::set<TestNumber> s;
     // assert(quantity <= numbers.size());
     for(int i = 0;i < quantity;i++){
@@ -65,7 +65,7 @@ bool Tester::test0(int quantity=65536){
     return true;
 }
 
-bool Tester::test1(int length=20000){
+bool Tester::test1(int length){
     int quantity = length / (sizeof(TestNumber) * 8);
     int count = 0;
     for(int i = 0;i < quantity;i++){
