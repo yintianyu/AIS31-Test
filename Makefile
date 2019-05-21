@@ -1,7 +1,7 @@
 # 20190521
 
 SRCS=AIS31-Test.cpp Tester.cpp
-PROG=AIS31-Test.out
+PROG=AIS31-Test.exe
 
 PARAM=-std=c++11
 CC=g++
