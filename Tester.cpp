@@ -50,7 +50,10 @@ bool Tester::test2() {
     }
     for (const auto &e : m) {
         squareAcc += e.first * e.first * e.second;
-Tester::~Tester(){
+    }
+}
+
+Tester::~Tester() {
     if(numbers != NULL){
         delete[] numbers;
         numbers = NULL;
