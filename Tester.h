@@ -24,7 +24,7 @@ class Tester{
     }
     inline void Toc(const std::string &name){
         finish = clock();
-        std::cout << name << " takes time: " << (double)(finish - start) / CLOCKS_PER_SEC << "s" << endl;
+        std::cout << name << " takes time: " << (double)(finish - start) / CLOCKS_PER_SEC * 1000 << "ms" << endl;
     }
     void generate(int quantity);
     bool test0(int quantity=65536);
