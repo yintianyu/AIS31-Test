@@ -84,6 +84,11 @@ bool Tester::test2() {
     for (const auto &e : m) {
         squareAcc += e.first * e.first * e.second;
     }
+    float T2 = squareAcc * 16.0 / 5000.0 - 5000;
+    if (T2 > 1.03 && T2 < 57.4) {
+        return true;
+    }
+    return false;
 }
 
 Tester::~Tester() {

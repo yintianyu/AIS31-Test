@@ -8,5 +8,6 @@ int main(void){
     Tester tester;
     tester.generate(65536);
     std::cout << tester.test0(65536) << std::endl;
+    std::cout << tester.test2() << std::endl;
     return 0;
 }
