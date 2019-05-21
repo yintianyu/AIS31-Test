@@ -4,14 +4,18 @@
 #define TESTER_H
 
 #include <vector>
+#include "QRBG-lib/QRBG.h"
 
 typedef long long TestNumber;
 
 class Tester{
-    std::vector<TestNumber> numbers;
+    TestNumber *numbers;
+    QRBG rndService;
     public:
+    Tester();
     void generate(int quantity);
     bool test0(int quantity);
+    ~Tester();
 };
 
 #endif

@@ -1,6 +1,6 @@
 # 20190521
 
-SRCS=AIS31-Test.cpp Tester.cpp
+SRCS=AIS31-Test.cpp Tester.cpp QRBG-lib/QRBG.cpp
 PROG=AIS31-Test.exe
 
 PARAM=-std=c++11
