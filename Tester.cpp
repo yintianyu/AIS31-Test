@@ -45,13 +45,39 @@ int Tester::bitcount(TestNumber n){
         table[(n >>56) &0xff];
 }
 
-void Tester::generate(int quantity){
+void Tester::get_real_from_server(int quantity){
     if(numbers != NULL){
         delete[] numbers;
         numbers = NULL;
     }
     numbers = new TestNumber[quantity];
     rndService.getInt64s(numbers, quantity);
+}
+
+void Tester::read_real_from_file(int quantity, std::string path){
+    if(numbers != NULL){
+        delete[] numbers;
+        numbers = NULL;
+    }
+    numbers = new TestNumber[quantity];
+    FILE *fp = fopen(path.c_str(), "rb");
+    if(fp != NULL){
+        fread(numbers, sizeof(TestNumber), quantity, fp);
+        fclose(fp);
+    }
+}
+
+void Tester::generate_pseudo(int quantity){
+    if(numbers != NULL){
+        delete[] numbers;
+        numbers = NULL;
+    }
+    numbers = new TestNumber[quantity]; 
+    std::random_device rd;
+    std::mt19937_64 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
+    for(int i = 0;i < quantity;i++){
+        numbers[i] = gen();// & 0xffffffffffff;
+    }
 }
 
 bool Tester::test0(int quantity){

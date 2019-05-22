@@ -26,7 +26,9 @@ class Tester{
         finish = clock();
         std::cout << name << " takes time: " << (double)(finish - start) / CLOCKS_PER_SEC * 1000 << "ms" << endl;
     }
-    void generate(int quantity);
+    void get_real_from_server(int quantity);
+    void read_real_from_file(int quantity, std::string path="./data/realrandom1048576.dat");
+    void generate_pseudo(int quantity);
     bool test0(int quantity=65536);
     bool test1(int length=20000);
     bool test2();

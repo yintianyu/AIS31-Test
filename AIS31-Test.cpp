@@ -7,7 +7,7 @@
 int main(void){
     Tester tester;
     tester.Tic();
-    tester.generate(65536);
+    tester.read_real_from_file(65536);
     tester.Toc("Generate Number");
     tester.Tic();
     std::cout << tester.test0(65536) << std::endl;
