@@ -7,7 +7,7 @@
 #include <set>
 #include <cassert>
 #include <map>
-//#include <iostream>
+#include <iostream>
 
 Tester::Tester():numbers(NULL){
     rndService.defineServer("random.irb.hr", 1227);
@@ -84,7 +84,7 @@ bool Tester::test0(int quantity){
     std::set<TestNumber> s;
     // assert(quantity <= numbers.size());
     for(int i = 0;i < quantity;i++){
-        std::pair<std::set<TestNumber>::iterator, bool> p = s.insert(numbers[i]);
+        std::pair<std::set<TestNumber>::iterator, bool> p = s.insert(numbers[i] & 0xffffffffffff);
         if(!p.second){
             return false;
         }
@@ -101,22 +101,37 @@ bool Tester::test1(int length){
     return count > 9654 && count < 10346;
 }
 
-bool Tester::test2() {
+bool Tester::test2(int length, float downBound, float upBound) {
     std::map <char, int> m;
     int squareAcc = 0;
-    for (int i = 0; i < 5000; i++) {
+    for (int i = 0; i < length / 4; i++) {
         char idx = numbers[i] & 0xf;
         ++m[idx];
     }
     for (const auto &e : m) {
-        //std::cout << e.first << " " << e.second << std::endl;
         squareAcc += e.second * e.second;
     }
-    float T2 = squareAcc * 16.0 / 5000.0 - 5000;
-    //std::cout << T2 << std::endl;
-    if (T2 > 1.03 && T2 < 57.4) {
+    float T2 = squareAcc * 64.0 / length - length / 4;
+    if (T2 > downBound && T2 < upBound) {
         return true;
     }
+    std::cout << "Wrong value " << T2 << ", out of range " << downBound << " ~ " << upBound << std::endl;
+    return false;
+}
+
+bool Tester::test5(int tao, int length, float downBound, float upBound) {
+    std::vector<bool> b(length);
+    int T5 = 0;
+    for (int i = 0; i < length; ++i) {
+        b[i] = numbers[i] & 1;
+    }
+    for (int i = 0; i < length / 2; ++i) {
+        T5 += b[i] ^ b[i + tao];
+    }
+    if (T5 > downBound && T5 < upBound) {
+        return true;
+    }
+    std::cout << "Wrong value " << T5 << ", out of range " << downBound << " ~ " << upBound << std::endl;
     return false;
 }
 

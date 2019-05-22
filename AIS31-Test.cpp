@@ -19,5 +19,7 @@ int main(void){
     std::cout << tester.test2() << std::endl;
     tester.Toc("Test2");
     tester.Tic();
+    std::cout << tester.test5(1) << std::endl;
+    tester.Toc("Test5");
     return 0;
 }
