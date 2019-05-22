@@ -35,6 +35,7 @@ class Tester{
     bool test3();
     bool test4();
     bool test5(int tao, int length=10000, float downBound=2326, float upBound=2674);
+    bool test8(int L=8, int Q=2560, int K=256000);
     ~Tester();
 };
 

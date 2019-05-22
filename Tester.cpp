@@ -8,6 +8,8 @@
 #include <cassert>
 #include <map>
 #include <iostream>
+#include <cmath>
+#include <cstring>
 
 Tester::Tester():numbers(NULL){
     rndService.defineServer("random.irb.hr", 1227);
@@ -241,6 +243,48 @@ bool Tester::test5(int tao, int length, float downBound, float upBound) {
     }
     std::cout << "Wrong value " << T5 << ", out of range " << downBound << " ~ " << upBound << std::endl;
     return false;
+}
+
+bool Tester::test8(int L, int Q, int K){
+    const unsigned long long bitmap[] = {
+        0x00000000000000ff, 0x000000000000ff00, 
+        0x0000000000ff0000, 0x00000000ff000000,
+        0x000000ff00000000, 0x0000ff0000000000,
+        0x00ff000000000000, 0xff00000000000000};
+    int length = pow(2, L);
+    int *lastPosition = new int[length];
+    memset(lastPosition, 0xff, sizeof(int) * length);
+    double entropy;
+    double *accumulator = new double[K + Q + 1];
+    int distance;
+
+    accumulator[1] = 0;
+    for(int i = 1;i < K + Q;i++)
+        accumulator[i+1] = accumulator[i] + 1.0 / i;
+    for(int i = 1;i <= K + Q;i++)
+        accumulator[i] /= log(2);
+    for(int i = 0;i < Q;i++){
+        // Assume that L = 8
+        int byte = i % L;
+        int idx = i / (sizeof(TestNumber) / L);
+        unsigned char data = numbers[idx] & bitmap[byte] >> (byte * L);
+        lastPosition[data] = i;
+    }
+    entropy = 0;
+    for(int i = Q;i < K + Q;i++){
+        // Assume that L = 8
+        int byte = i % L;
+        int idx = i / (sizeof(TestNumber) / L);
+        unsigned char data = numbers[idx] & bitmap[byte] >> (byte * L);
+        distance = i - lastPosition[data];
+        lastPosition[data] = i;
+        entropy += accumulator[distance];
+    }
+    entropy /= K;
+
+    delete[] lastPosition;
+    delete[] accumulator;
+    return entropy > 7.976;
 }
 
 Tester::~Tester() {
