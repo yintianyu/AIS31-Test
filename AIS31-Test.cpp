@@ -34,5 +34,11 @@ int main(void){
     std::cout << tester.test7() << std::endl;
     tester.Toc("Test7");
     tester.Tic();
+    tester.generate_pseudo(81920000);
+    tester.Toc("Get from server");
+    tester.Tic();
+    std::cout << tester.test8() << std::endl;
+    tester.Toc("Test5");
+    tester.Tic();
     return 0;
 }
