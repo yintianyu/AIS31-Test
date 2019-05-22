@@ -243,6 +243,58 @@ bool Tester::test5(int tao, int length, float downBound, float upBound) {
     return false;
 }
 
+// assume k = 1
+bool Tester::test6(int n, float a) {
+    std::vector <bool> b(n);
+    int T6 = 0;
+    assert(n < 65536 * 2);
+    for (int i = 0; i < n / 2; ++i) {
+        b[2 * i] = numbers[i] & 1;
+        b[2 * i + 1] = (numbers[i] >> 1) & 1;
+    }
+    for (int i = 0; i < n; ++i) {
+        T6 += b[i];
+    }
+    float testVal = (float) T6 / (float) n - 0.5;
+    if (testVal > -a && testVal < a) {
+        return true;
+    }
+    std::cout << "Wrong value " << testVal + 0.5 << ", out of range " << 0.5 - a << " ~ " << 0.5 + a << std::endl;
+    return false;
+}
+
+bool Tester::test7(int n, float upBound) {
+    std::vector<bool> full = {0, 0, 0, 0};
+    std::vector<int> count= {0, 0, 0, 0};
+    std::vector<int> onesCnt= {0, 0, 0, 0};
+    std::vector<int> zerosCnt= {0, 0, 0, 0};
+    int idx;
+    double T7;
+    while (full[0] + full[1] + full[2] + full[3] < 4) {
+        generate_pseudo(n);
+        for (int i = 0; i < n; ++i) {
+            idx =  numbers[i] & 3;
+            if (full[idx] == 0) {
+                ++count[idx];
+                if (count[idx] == n) { full[idx] = 1; }
+                onesCnt[idx] += (numbers[i] >> 2) & 1;
+            }
+        }
+    }
+    for (int i = 0; i < 4; ++i) { zerosCnt[i] = n - onesCnt[i]; }
+    for (int i = 0; i < 2; ++i) {
+        T7 = (double) ((zerosCnt[2 * i] - zerosCnt[2 * i + 1]) * (zerosCnt[2 * i] - zerosCnt[2 * i + 1])) / (zerosCnt[2 * i] + zerosCnt[2 * i + 1]) +
+            (double) ((onesCnt[2 * i] - onesCnt[2 * i + 1]) * (onesCnt[2 * i] - onesCnt[2 * i + 1])) / (onesCnt[2 * i] + onesCnt[2 * i + 1]);
+        if (T7 > 15.13) { 
+            std::cout << "Wrong value " << T7 << ", out of range " << "" << " ~ " << upBound << std::endl;
+            return false; 
+        }
+    }
+    // test
+    // std::cout << "Right value " << T7 << std::endl;
+    return true;
+}
+
 Tester::~Tester() {
     if(numbers != NULL){
         delete[] numbers;
