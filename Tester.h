@@ -32,6 +32,8 @@ class Tester{
     bool test0(int quantity=65536);
     bool test1(int length=20000);
     bool test2();
+    bool test3();
+    bool test4();
     ~Tester();
 };
 
