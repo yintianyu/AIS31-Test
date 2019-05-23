@@ -34,11 +34,11 @@ int main(void){
     std::cout << tester.test7() << std::endl;
     tester.Toc("Test7");
     tester.Tic();
-    tester.generate_pseudo(81920000);
+    tester.read_real_from_file(81920000, "./data/realrandomcat.dat");
     tester.Toc("Get from server");
     tester.Tic();
     std::cout << tester.test8() << std::endl;
-    tester.Toc("Test5");
+    tester.Toc("Test8");
     tester.Tic();
     return 0;
 }
