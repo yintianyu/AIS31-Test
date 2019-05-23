@@ -100,8 +100,10 @@ bool Tester::test0(int quantity){
     std::sort(numbers48, numbers48 + quantity);
     for(int i=0; i<quantity-1; i++)
 	{
-		if(numbers48[i] == numbers48[i+1])
+		if(numbers48[i] == numbers48[i+1]){
+            std::cout << "T0 Failed" << std::endl;
 			return false;
+        }
 	}
     return true;
 }
@@ -112,6 +114,10 @@ bool Tester::test1(int length){
     for(int i = 0;i < quantity;i++){
         count += bitcount(numbers[i]);
     }
+    if(count > 9654 && count < 10346){
+        return true;
+    }
+    std::cout << "T1 value error " << count << " expected 9654-10346" << std::endl;
     return count > 9654 && count < 10346;
 }
 
@@ -136,7 +142,7 @@ bool Tester::test2(int length, float downBound, float upBound) {
     if (T2 > downBound && T2 < upBound) {
         return true;
     }
-    // std::cout << "Wrong value " << T2 << ", out of range " << downBound << " ~ " << upBound << std::endl;
+    std::cout << "T2 Wrong value " << T2 << ", out of range " << downBound << " ~ " << upBound << std::endl;
     return false;
 }
 
@@ -207,10 +213,16 @@ bool Tester::test3(){
     }
     bool result = true;
     for(int i = 1;i < 7;i++){
-        if(Tp0[i] < lowerbound[i] || Tp0[i] > upperbound[i])
+        if(Tp0[i] < lowerbound[i] || Tp0[i] > upperbound[i]){
+            std::cout << "T3 Tp0[" << i << "] error, got " << Tp0[i] << " expected " << lowerbound[i] <<\
+            "-" << upperbound[i] << std::endl;
             result = false;
-        if(Tp1[i] < lowerbound[i] || Tp1[i] > upperbound[i])
+        }
+        if(Tp1[i] < lowerbound[i] || Tp1[i] > upperbound[i]){
+            std::cout << "T3 Tp1[" << i << "] error, got " << Tp1[i] << " expected " << lowerbound[i] <<\
+            "-" << upperbound[i] << std::endl;
             result = false;
+        }
     }
     return result;
 }
@@ -234,6 +246,7 @@ bool Tester::test4(){
         int current = (numbers[idx] & bitmap[bit]) != 0;
         if(current == state){
             if(++cnt >= 34){
+                std::cout << "T4 error" << std::endl;
                 return false;
             }
         }
@@ -285,7 +298,7 @@ bool Tester::test5(int tao, int& T5, int time, int length, float downBound, floa
     if (T5 > downBound && T5 < upBound) {
         return true;
     }
-    // std::cout << "Wrong value " << T5 << ", out of range " << downBound << " ~ " << upBound << std::endl;
+    std::cout << "T5 Wrong value " << T5 << ", out of range " << downBound << " ~ " << upBound << std::endl;
     return false;
 }
 
@@ -305,7 +318,7 @@ bool Tester::test6(int n, float a) {
     if (testVal > -a && testVal < a) {
         return true;
     }
-    std::cout << "Wrong value " << testVal + 0.5 << ", out of range " << 0.5 - a << " ~ " << 0.5 + a << std::endl;
+    std::cout << "T6 Wrong value " << testVal + 0.5 << ", out of range " << 0.5 - a << " ~ " << 0.5 + a << std::endl;
     return false;
 }
 
@@ -332,7 +345,7 @@ bool Tester::test7(int n, float upBound) {
         T7 = (double) ((zerosCnt[2 * i] - zerosCnt[2 * i + 1]) * (zerosCnt[2 * i] - zerosCnt[2 * i + 1])) / (zerosCnt[2 * i] + zerosCnt[2 * i + 1]) +
             (double) ((onesCnt[2 * i] - onesCnt[2 * i + 1]) * (onesCnt[2 * i] - onesCnt[2 * i + 1])) / (onesCnt[2 * i] + onesCnt[2 * i + 1]);
         if (T7 > 15.13) { 
-            std::cout << "Wrong value " << T7 << ", out of range " << "" << " ~ " << upBound << std::endl;
+            std::cout << "T7 Wrong value " << T7 << ", out of range " << "" << " ~ " << upBound << std::endl;
             return false; 
         }
     }
@@ -380,7 +393,11 @@ bool Tester::test8(int L, int Q, int K){
 
     delete[] lastPosition;
     delete[] accumulator;
-    return entropy > 7.976;
+    if(entropy > 7.976){
+        return true;
+    }
+    std::cout << "T8 failed, enrtopy got " << entropy << " expeced > 7.976" << std::endl;
+    return false;
 }
 
 bool Tester::procedureA(int time){
@@ -428,10 +445,10 @@ bool Tester::procedureA(int time){
     return true;
 }
 
-bool Tester::procedureB(int time) {
-    assert(time == 0 || time == 1);
-    int biasA = 
-}
+// bool Tester::procedureB(int time) {
+//     assert(time == 0 || time == 1);
+//     int biasA = 
+// }
 
 Tester::~Tester() {
     if(numbers != NULL){
