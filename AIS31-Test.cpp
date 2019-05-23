@@ -14,12 +14,6 @@ int main(void){
     std::cout << tester.test0(65536) << std::endl;
     tester.Toc("Test0");
     tester.Tic();
-    std::cout << tester.test0_1(65536) << std::endl;
-    tester.Toc("Test0_1");
-    tester.Tic();
-    std::cout << tester.test0_2(65536) << std::endl;
-    tester.Toc("Test0_2");
-    tester.Tic();
     std::cout << tester.test1(20000) << std::endl;
     tester.Toc("Test1");
     tester.Tic();
