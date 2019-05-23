@@ -42,7 +42,8 @@ int main(void){
     // tester.Toc("Test8");
     // tester.Tic();
     tester.Tic();
-    cout << tester.procedureA(0) << endl;
+    // cout << tester.procedureA(0) << endl;
+    cout << tester.procedureB(0) << endl;
     tester.Toc("Procedure A");
     return 0;
 }

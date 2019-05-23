@@ -126,13 +126,13 @@ bool Tester::test2(int length, float downBound, float upBound) {
     int squareAcc = 0;
     int quantity = length / (sizeof(TestNumber) * 8);
     for (int i = 0; i < quantity; i++) {
-        for (int j = 0; j < sizeof(TestNumber) * 8; ++j) {
-            char idx = (numbers[i] >> j) & 1;
+        for (int j = 0; j < sizeof(TestNumber) * 2; ++j) {
+            char idx = (numbers[i] >> (j * 4)) & 0xf;
             ++m[idx];
         }
     }
-    for (int i = 0; i < length % (sizeof(TestNumber) * 8); ++i) {
-        char idx = (numbers[quantity] >> i) & 1;
+    for (int i = 0; i < (length % (sizeof(TestNumber) * 8)) / 4; ++i) {
+        char idx = (numbers[quantity] >> (4 * i)) & 0xf;
         ++m[idx];
     }
     for (const auto &e : m) {
@@ -303,54 +303,150 @@ bool Tester::test5(int tao, int& T5, int time, int length, float downBound, floa
 }
 
 // assume k = 1
-bool Tester::test6(int n, float a) {
-    std::vector <bool> b(n);
+bool Tester::test6a(int n, float a) {
+    // std::vector <bool> b(n);
     int T6 = 0;
-    assert(n < 65536 * 2);
-    for (int i = 0; i < n / 2; ++i) {
-        b[2 * i] = numbers[i] & 1;
-        b[2 * i + 1] = (numbers[i] >> 1) & 1;
+    int quantity = n / (sizeof(TestNumber) * 8);
+    // int idx = 0;
+    for (int i = 0; i < quantity; ++i) {
+        for (int j = 0; j < (sizeof(TestNumber) * 8); ++j) {
+            T6 += (numbers[i] >> j) & 1;
+        }
     }
-    for (int i = 0; i < n; ++i) {
-        T6 += b[i];
+    for (int i = 0; i < n % (sizeof(TestNumber) * 8); ++i) {
+        T6 += (numbers[quantity] >> i) & 1;
     }
-    float testVal = (float) T6 / (float) n - 0.5;
+    // for (int i = 0; i < n; ++i) {
+    //     T6 += b[i];
+    // }
+    float testVal = (double) T6 / n - 0.5;
     if (testVal > -a && testVal < a) {
         return true;
     }
-    std::cout << "T6 Wrong value " << testVal + 0.5 << ", out of range " << 0.5 - a << " ~ " << 0.5 + a << std::endl;
+    std::cout << "T6a Wrong value " << testVal + 0.5 << ", out of range " << 0.5 - a << " ~ " << 0.5 + a << std::endl;
     return false;
 }
 
-bool Tester::test7(int n, float upBound) {
+bool Tester::test6b(int& biasA, int n, float a) {
+    bool full[] = {0, 0};
+    int count[] = {0, 0};
+    int onesCnt[] = {0, 0};
+    int zerosCnt[] = {0, 0};
+    int idx;
+    int quantity = n / (sizeof(TestNumber) * 8);
+    double T6;
+    while (full[0] + full[1] < 2) {
+        read_real_from_file(quantity + 1, biasA);
+        for (int i = 0; i < quantity; ++i) {
+            for (int j = 0; j < sizeof(TestNumber) * 4; ++j) {
+                idx = (numbers[i] >> (2*j)) & 1;
+                if (full[idx] == 0) {
+                    ++count[idx];
+                    if (count[idx] == n) { full[idx] = 1; }
+                    onesCnt[idx] += (numbers[i] >> (2*j + 1)) & 1;
+                }
+            }
+        }
+        for (int i = 0; i < n % (sizeof(TestNumber) * 8); ++i) {
+            idx = (numbers[quantity] >> (2*i)) & 1;
+            if (full[idx] == 0) {
+                ++count[idx];
+                if (count[idx] == n) { full[idx] = 1; }
+                onesCnt[idx] += (numbers[quantity] >> (2*i + 1)) & 1;
+            }
+        }
+        biasA += quantity * 8;
+    }
+    for (int i = 0; i < 2; ++i) { zerosCnt[i] = n - onesCnt[i]; }
+    T6 = abs((double) onesCnt[0] / n + (double) zerosCnt[1] / n - 1);
+    if (T6 < a) {
+        return true;
+    } 
+    std::cout << "T6b Wrong value " << T6 << ", out of range " << "" << " ~ " << a << std::endl;
+    return false;
+}
+
+bool Tester::test7a(int& biasA, int n, float upBound) {
     bool full[] = {0, 0, 0, 0};
     int count[] = {0, 0, 0, 0};
     int onesCnt[] = {0, 0, 0, 0};
     int zerosCnt[] = {0, 0, 0, 0};
     int idx;
+    int quantity = n / (sizeof(TestNumber) * 8);
     double T7;
     while (full[0] + full[1] + full[2] + full[3] < 4) {
-        generate_pseudo(n);
-        for (int i = 0; i < n; ++i) {
-            idx =  numbers[i] & 3;
+        read_real_from_file(quantity + 1, biasA);
+        for (int i = 0; i < quantity; ++i) {
+            for (int j = 0; j < sizeof(TestNumber) * 2; ++j) {
+                idx =  (numbers[i] >> (4*j)) & 3;
+                if (full[idx] == 0) {
+                    ++count[idx];
+                    if (count[idx] == n) { full[idx] = 1; }
+                    onesCnt[idx] += (numbers[i] >> (4*j + 2)) & 1;
+                }
+            }
+        }
+        for (int i = 0; i < sizeof(TestNumber) * 2; ++i) {
+            idx = (numbers[quantity] >> (4*i)) & 3;
             if (full[idx] == 0) {
                 ++count[idx];
                 if (count[idx] == n) { full[idx] = 1; }
-                onesCnt[idx] += (numbers[i] >> 2) & 1;
+                onesCnt[idx] += (numbers[quantity] >> (4*i + 2)) & 1;
             }
         }
+        biasA += quantity * 8;
     }
     for (int i = 0; i < 4; ++i) { zerosCnt[i] = n - onesCnt[i]; }
     for (int i = 0; i < 2; ++i) {
         T7 = (double) ((zerosCnt[2 * i] - zerosCnt[2 * i + 1]) * (zerosCnt[2 * i] - zerosCnt[2 * i + 1])) / (zerosCnt[2 * i] + zerosCnt[2 * i + 1]) +
             (double) ((onesCnt[2 * i] - onesCnt[2 * i + 1]) * (onesCnt[2 * i] - onesCnt[2 * i + 1])) / (onesCnt[2 * i] + onesCnt[2 * i + 1]);
         if (T7 > 15.13) { 
-            std::cout << "T7 Wrong value " << T7 << ", out of range " << "" << " ~ " << upBound << std::endl;
+            std::cout << "T7a Wrong value " << T7 << ", out of range " << "" << " ~ " << upBound << std::endl;
             return false; 
         }
     }
-    // test
-    // std::cout << "Right value " << T7 << std::endl;
+    return true;
+}
+
+bool Tester::test7b(int& biasA, int n, float upBound) {
+    bool full[] = {0, 0, 0, 0, 0, 0, 0, 0};
+    int count[] = {0, 0, 0, 0, 0, 0, 0, 0};
+    int onesCnt[] = {0, 0, 0, 0, 0, 0, 0, 0};
+    int zerosCnt[] = {0, 0, 0, 0, 0, 0, 0, 0};
+    int idx;
+    int quantity = n / (sizeof(TestNumber) * 8);
+    double T7;
+    while (full[0] + full[1] + full[2] + full[3] + full[4] + full[5] + full[6] + full[7] < 8) {
+        read_real_from_file(quantity + 1, biasA);
+        for (int i = 0; i < quantity; ++i) {
+            for (int j = 0; j < sizeof(TestNumber) * 2; ++j) {
+                idx =  (numbers[i] >> (4*j)) & 7;
+                if (full[idx] == 0) {
+                    ++count[idx];
+                    if (count[idx] == n) { full[idx] = 1; }
+                    onesCnt[idx] += (numbers[i] >> (4*j + 3)) & 1;
+                }
+            }
+        }
+        for (int i = 0; i < sizeof(TestNumber) * 2; ++i) {
+            idx = (numbers[quantity] >> (4*i)) & 7;
+            if (full[idx] == 0) {
+                ++count[idx];
+                if (count[idx] == n) { full[idx] = 1; }
+                onesCnt[idx] += (numbers[quantity] >> (4*i + 3)) & 1;
+            }
+        }
+        biasA += quantity * 8;
+    }
+    for (int i = 0; i < 8; ++i) { zerosCnt[i] = n - onesCnt[i]; }
+    for (int i = 0; i < 4; ++i) {
+        T7 = (double) ((zerosCnt[2 * i] - zerosCnt[2 * i + 1]) * (zerosCnt[2 * i] - zerosCnt[2 * i + 1])) / (zerosCnt[2 * i] + zerosCnt[2 * i + 1]) +
+            (double) ((onesCnt[2 * i] - onesCnt[2 * i + 1]) * (onesCnt[2 * i] - onesCnt[2 * i + 1])) / (onesCnt[2 * i] + onesCnt[2 * i + 1]);
+        if (T7 > 15.13) { 
+            std::cout << "T7b Wrong value " << T7 << ", out of range " << "" << " ~ " << upBound << std::endl;
+            return false; 
+        }
+    }
     return true;
 }
 
@@ -445,10 +541,41 @@ bool Tester::procedureA(int time){
     return true;
 }
 
-// bool Tester::procedureB(int time) {
-//     assert(time == 0 || time == 1);
-//     int biasA = 
-// }
+bool Tester::procedureB(int time) {
+    assert(time == 0 || time == 1);
+    int biasA = 2000000;
+    if (time == 1) { biasA = 4000000; }
+    int quantity = 100000 / (sizeof(TestNumber) * 8) + 1;
+    read_real_from_file(100000 / (sizeof(TestNumber) * 8) + 1, biasA);
+    biasA += quantity * 8;
+    int failerTime = 0;
+    if(!test6a()) {
+        failerTime = 1;
+    }
+    if(!test6b(biasA)) {
+        ++failerTime;
+    }
+    if(!test7a(biasA)) {
+        ++failerTime;
+    }
+    if(!test7b(biasA)) {
+        ++failerTime;
+    }
+    read_real_from_file((2560 + 256000), biasA);
+    if(!test8()) {
+        ++failerTime;
+    }
+    if(failerTime >= 2) {
+        return false;
+    }
+    else if(failerTime == 1) {
+        if(time == 1){
+            return false;
+        }
+        return procedureB(1);
+    }
+    return true;
+}
 
 Tester::~Tester() {
     if(numbers != NULL){
