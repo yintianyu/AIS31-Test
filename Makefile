@@ -1,6 +1,6 @@
 # 20190521
 
-SRCS=AIS31-Test.cpp Tester.cpp QRBG-lib/QRBG.cpp
+SRCS=AIS31-Test.cpp Tester.cpp hashtable.cpp QRBG-lib/QRBG.cpp
 PROG=AIS31-Test.exe
 PARAM=-std=c++11
 ifeq ($(win32),true)
@@ -14,10 +14,10 @@ HEADS=$(SRCS:%.cpp=%.h)
 
 default: $(PROG)
 $(PROG): $(OBJS)
-	$(CC) $(PARAM) -o $(PROG) $(OBJS) $(LDLIBRARY)
+	$(CC) $(PARAM) -o $(PROG) $(OBJS) $(LDLIBRARY) -g
 
 %.o: %.c $(HEADS)
-	$(CC) $(PARAM) -c $< -o $@
+	$(CC) $(PARAM) -c $< -o $@ -g
 
 .PHONY: clean
 clean: 

@@ -14,6 +14,7 @@ typedef long long TestNumber;
 
 class Tester{
     TestNumber *numbers;
+    TestNumber *numbers48;
     QRBG rndService;
     clock_t start, finish;
     int bitcount(TestNumber n);
@@ -29,6 +30,7 @@ class Tester{
     void get_real_from_server(int quantity);
     void read_real_from_file(int quantity, std::string path="./data/realrandom1048576.dat");
     void generate_pseudo(int quantity);
+    void convert_48(int quantity);
     bool test0(int quantity=65536);
     bool test1(int length=20000);
     bool test2(int length=20000, float downBound=1.03, float upBound=57.4);

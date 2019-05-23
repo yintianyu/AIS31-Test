@@ -8,10 +8,11 @@
 #include <cassert>
 #include <map>
 #include <iostream>
+#include <algorithm>
 #include <cmath>
 #include <cstring>
 
-Tester::Tester():numbers(NULL){
+Tester::Tester():numbers(NULL), numbers48(NULL){
     rndService.defineServer("random.irb.hr", 1227);
 	rndService.defineUser("username", "password");
 }
@@ -82,15 +83,25 @@ void Tester::generate_pseudo(int quantity){
     }
 }
 
-bool Tester::test0(int quantity){
-    std::set<TestNumber> s;
-    // assert(quantity <= numbers.size());
-    for(int i = 0;i < quantity;i++){
-        std::pair<std::set<TestNumber>::iterator, bool> p = s.insert(numbers[i] & 0xffffffffffff);
-        if(!p.second){
-            return false;
-        }
+void Tester::convert_48(int quantity){
+    if(numbers48 != NULL){
+        delete[] numbers48;
+        numbers48 = NULL;
     }
+    numbers48 = new TestNumber[quantity];
+    for(int i = 0;i < quantity;i++){
+        numbers48[i] = numbers[i] & 0xffffffffffff;
+    }
+}
+
+
+bool Tester::test0(int quantity){
+    std::sort(numbers48, numbers48 + quantity);
+    for(int i=0; i<quantity-1; i++)
+	{
+		if(numbers48[i] == numbers48[i+1])
+			return false;
+	}
     return true;
 }
 
@@ -343,5 +354,9 @@ Tester::~Tester() {
     if(numbers != NULL){
         delete[] numbers;
         numbers = NULL;
+    }
+    if(numbers48 != NULL){
+        delete[] numbers48;
+        numbers48 = NULL;
     }
 }
