@@ -360,7 +360,7 @@ bool Tester::procedureA(int time){
         failerTime = 1;
     }
     for(int i = 0;i < 257;i++){
-        read_real_from_file(20000/sizeof(TestNumber), i * 20000 / 8 + time * 20000 * 257 / 8);
+        read_real_from_file(20000/sizeof(TestNumber) + 1, i * 20000 / 8 + time * 20000 * 257 / 8);
         if(!test1())
             ++failerTime;
         if(!test2())
