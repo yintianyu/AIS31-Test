@@ -27,8 +27,9 @@ class Tester{
         finish = clock();
         std::cout << name << " takes time: " << (double)(finish - start) / CLOCKS_PER_SEC * 1000 << "ms" << endl;
     }
+    private:
     void get_real_from_server(int quantity);
-    void read_real_from_file(int quantity, std::string path="./data/realrandom1048576.dat");
+    void read_real_from_file(int quantity, int biasByte=0, std::string path="./data/realrandomcat.dat");
     void generate_pseudo(int quantity);
     void convert_48(int quantity);
     bool test0(int quantity=65536);
@@ -40,6 +41,8 @@ class Tester{
     bool test6(int n=100000, float a=0.025);
     bool test7(int n=100000, float upBound=15.13);
     bool test8(int L=8, int Q=2560, int K=256000);
+    public:
+    bool procedureA(int time=0);
     ~Tester();
 };
 

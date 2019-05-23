@@ -57,7 +57,7 @@ void Tester::get_real_from_server(int quantity){
     rndService.getInt64s(numbers, quantity);
 }
 
-void Tester::read_real_from_file(int quantity, std::string path){
+void Tester::read_real_from_file(int quantity, int biasByte, std::string path){
     if(numbers != NULL){
         delete[] numbers;
         numbers = NULL;
@@ -65,6 +65,7 @@ void Tester::read_real_from_file(int quantity, std::string path){
     numbers = new TestNumber[quantity];
     FILE *fp = fopen(path.c_str(), "rb");
     if(fp != NULL){
+        fseek(fp, biasByte, SEEK_SET);
         fread(numbers, sizeof(TestNumber), quantity, fp);
         fclose(fp);
     }
@@ -348,6 +349,39 @@ bool Tester::test8(int L, int Q, int K){
     delete[] lastPosition;
     delete[] accumulator;
     return entropy > 7.976;
+}
+
+bool Tester::procedureA(int time){
+    assert(time == 0 || time == 1);
+    read_real_from_file(65536);
+    convert_48(65536);
+    int failerTime = 0;
+    if(!test0()){
+        failerTime = 1;
+    }
+    for(int i = 0;i < 257;i++){
+        read_real_from_file(20000/sizeof(TestNumber), i * 20000 / 8 + time * 20000 * 257 / 8);
+        if(!test1())
+            ++failerTime;
+        if(!test2())
+            ++failerTime;
+        if(!test3())
+            ++failerTime;
+        if(!test4())
+            ++failerTime;
+        if(!test5(1))
+            ++failerTime;
+        if(failerTime >= 2){
+            return false;
+        }
+    }
+    if(failerTime == 1){
+        if(time == 1){
+            return false;
+        }
+        return procedureA(1);
+    }
+    return true;
 }
 
 Tester::~Tester() {
