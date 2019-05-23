@@ -248,17 +248,36 @@ bool Tester::test4(){
     return true;
 }
 
-bool Tester::test5(int tao, int& T5, int length, float downBound, float upBound) {
+bool Tester::test5(int tao, int& T5, int time, int length, float downBound, float upBound) {
+    // time = 0: b1 ~ b10000
+    // time = 1: b10001 ~ b20000
     std::vector<bool> b(length);
     int quantity = length / (sizeof(TestNumber) * 8);
+    int quantity2 = (2 * length ) / (sizeof(TestNumber) * 8);
     T5 = 0;
-    for (int i = 0; i < quantity ; ++i) {
-        for (int j = 0; j < sizeof(TestNumber) * 8; ++j) {
-            b[sizeof(TestNumber) * 8 * i + j] = (numbers[i] >> j) & 1;
+    if (time == 0) {
+        int idx = 0;
+        for (int i = 0; i < quantity ; ++i) {
+            for (int j = 0; j < sizeof(TestNumber) * 8; ++j) {
+                b[idx++] = (numbers[i] >> j) & 1;
+            }
         }
-    }
-    for (int i = 0; i < length % (sizeof(TestNumber) * 8); ++i) {
-        b[quantity * (sizeof(TestNumber) * 8) + i] = (numbers[quantity] >> i) & 1;
+        for (int i = 0; i < length % (sizeof(TestNumber) * 8); ++i) {
+            b[idx++] = (numbers[quantity] >> i) & 1;
+        }
+    } else {
+        int idx = 0;
+        for (int i = length % (sizeof(TestNumber) * 8); i < sizeof(TestNumber) * 8; ++i) {
+            b[idx++] = (numbers[quantity] >> i) & 1;
+        }
+        for (int i = quantity + 1; i < quantity2; ++i) {
+            for (int j = 0; j < sizeof(TestNumber) * 8; ++j) {
+                b[idx++] = (numbers[i] >> j) & 1;
+            }
+        }
+        for (int i = 0; i < (2 * length) % (sizeof(TestNumber) * 8); ++i) {
+            b[idx++] = (numbers[quantity2] >> i) & 1;
+        }
     }
     for (int i = 0; i < length / 2; ++i) {
         T5 += b[i] ^ b[i + tao];
@@ -385,7 +404,7 @@ bool Tester::procedureA(int time){
         int T5 = 0;
         int max = 0, maxTau = 0;
         for(int i = 1;i <= 5000;i++){
-            if(!test5(i, T5)){
+            if(!test5(i, T5, 0)){
                 ++failerTime;
                 break;
             }
@@ -394,7 +413,8 @@ bool Tester::procedureA(int time){
                 maxTau = i;
             }
         }
-        
+        if(!test5(maxTau, T5, 0))
+            ++failerTime;
         if(failerTime >= 2){
             return false;
         }
@@ -406,6 +426,11 @@ bool Tester::procedureA(int time){
         return procedureA(1);
     }
     return true;
+}
+
+bool Tester::procedureB(int time) {
+    assert(time == 0 || time == 1);
+    int biasA = 
 }
 
 Tester::~Tester() {
