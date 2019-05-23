@@ -251,8 +251,7 @@ bool Tester::test4(){
 bool Tester::test5(int tao, int& T5, int length, float downBound, float upBound) {
     std::vector<bool> b(length);
     int quantity = length / (sizeof(TestNumber) * 8);
-    assert(T5 = 0);
-    // int T5 = 0;
+    T5 = 0;
     for (int i = 0; i < quantity ; ++i) {
         for (int j = 0; j < sizeof(TestNumber) * 8; ++j) {
             b[sizeof(TestNumber) * 8 * i + j] = (numbers[i] >> j) & 1;
@@ -383,8 +382,19 @@ bool Tester::procedureA(int time){
             ++failerTime;
         if(!test4())
             ++failerTime;
-        if(!test5(1))
-            ++failerTime;
+        int T5 = 0;
+        int max = 0, maxTau = 0;
+        for(int i = 1;i <= 5000;i++){
+            if(!test5(i, T5)){
+                ++failerTime;
+                break;
+            }
+            if(abs(T5 - 2500) > max){
+                max = abs(T5 - 2500);
+                maxTau = i;
+            }
+        }
+        
         if(failerTime >= 2){
             return false;
         }
