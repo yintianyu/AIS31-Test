@@ -266,10 +266,10 @@ bool Tester::test6(int n, float a) {
 }
 
 bool Tester::test7(int n, float upBound) {
-    std::vector<bool> full = {0, 0, 0, 0};
-    std::vector<int> count= {0, 0, 0, 0};
-    std::vector<int> onesCnt= {0, 0, 0, 0};
-    std::vector<int> zerosCnt= {0, 0, 0, 0};
+    bool full[] = {0, 0, 0, 0};
+    int count[] = {0, 0, 0, 0};
+    int onesCnt[] = {0, 0, 0, 0};
+    int zerosCnt[] = {0, 0, 0, 0};
     int idx;
     double T7;
     while (full[0] + full[1] + full[2] + full[3] < 4) {
