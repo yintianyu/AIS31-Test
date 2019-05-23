@@ -1,6 +1,6 @@
 # 20190521
 
-SRCS=AIS31-Test.cpp Tester.cpp hashtable.cpp QRBG-lib/QRBG.cpp
+SRCS=AIS31-Test.cpp Tester.cpp QRBG-lib/QRBG.cpp
 PROG=AIS31-Test.exe
 PARAM=-std=c++11
 ifeq ($(win32),true)

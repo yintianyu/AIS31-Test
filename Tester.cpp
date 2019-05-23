@@ -118,8 +118,15 @@ bool Tester::test1(int length){
 bool Tester::test2(int length, float downBound, float upBound) {
     std::map <char, int> m;
     int squareAcc = 0;
-    for (int i = 0; i < length / 4; i++) {
-        char idx = numbers[i] & 0xf;
+    int quantity = length / (sizeof(TestNumber) * 8);
+    for (int i = 0; i < quantity; i++) {
+        for (int j = 0; j < sizeof(TestNumber) * 8; ++j) {
+            char idx = (numbers[i] >> j) & 1;
+            ++m[idx];
+        }
+    }
+    for (int i = 0; i < length % (sizeof(TestNumber) * 8); ++i) {
+        char idx = (numbers[quantity] >> i) & 1;
         ++m[idx];
     }
     for (const auto &e : m) {
@@ -129,7 +136,7 @@ bool Tester::test2(int length, float downBound, float upBound) {
     if (T2 > downBound && T2 < upBound) {
         return true;
     }
-    std::cout << "Wrong value " << T2 << ", out of range " << downBound << " ~ " << upBound << std::endl;
+    // std::cout << "Wrong value " << T2 << ", out of range " << downBound << " ~ " << upBound << std::endl;
     return false;
 }
 
@@ -241,11 +248,18 @@ bool Tester::test4(){
     return true;
 }
 
-bool Tester::test5(int tao, int length, float downBound, float upBound) {
+bool Tester::test5(int tao, int& T5, int length, float downBound, float upBound) {
     std::vector<bool> b(length);
-    int T5 = 0;
-    for (int i = 0; i < length; ++i) {
-        b[i] = numbers[i] & 1;
+    int quantity = length / (sizeof(TestNumber) * 8);
+    assert(T5 = 0);
+    // int T5 = 0;
+    for (int i = 0; i < quantity ; ++i) {
+        for (int j = 0; j < sizeof(TestNumber) * 8; ++j) {
+            b[sizeof(TestNumber) * 8 * i + j] = (numbers[i] >> j) & 1;
+        }
+    }
+    for (int i = 0; i < length % (sizeof(TestNumber) * 8); ++i) {
+        b[quantity * (sizeof(TestNumber) * 8) + i] = (numbers[quantity] >> i) & 1;
     }
     for (int i = 0; i < length / 2; ++i) {
         T5 += b[i] ^ b[i + tao];
@@ -253,7 +267,7 @@ bool Tester::test5(int tao, int length, float downBound, float upBound) {
     if (T5 > downBound && T5 < upBound) {
         return true;
     }
-    std::cout << "Wrong value " << T5 << ", out of range " << downBound << " ~ " << upBound << std::endl;
+    // std::cout << "Wrong value " << T5 << ", out of range " << downBound << " ~ " << upBound << std::endl;
     return false;
 }
 
@@ -360,7 +374,7 @@ bool Tester::procedureA(int time){
         failerTime = 1;
     }
     for(int i = 0;i < 257;i++){
-        read_real_from_file(20000/sizeof(TestNumber), i * 20000 / 8 + time * 20000 * 257 / 8);
+        read_real_from_file(20000/sizeof(TestNumber) + 1, i * 20000 / 8 + time * 20000 * 257 / 8);
         if(!test1())
             ++failerTime;
         if(!test2())
