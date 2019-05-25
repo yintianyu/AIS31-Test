@@ -11,6 +11,10 @@
 #include <algorithm>
 #include <cmath>
 #include <cstring>
+#include <thread>
+#include <functional>
+
+#define THREADNUMBER (8)
 
 Tester::Tester():numbers(NULL), numbers48(NULL){
     rndService.defineServer("random.irb.hr", 1227);
@@ -500,7 +504,7 @@ bool Tester::procedureA(int time){
     assert(time == 0 || time == 1);
     read_real_from_file(65536);
     convert_48(65536);
-    int failerTime = 0;
+    failerTime = 0;
     if(!test0()){
         failerTime = 1;
     }
@@ -515,18 +519,34 @@ bool Tester::procedureA(int time){
         if(!test4())
             ++failerTime;
         int T5 = 0;
-        int max = 0, maxTau = 0;
-        for(int i = 1;i <= 5000;i++){
-            if(!test5(i, T5, 0)){
-                ++failerTime;
-                break;
-            }
-            if(abs(T5 - 2500) > max){
-                max = abs(T5 - 2500);
-                maxTau = i;
-            }
+        maxTau = 0;
+        // int max = 0, maxTau = 0;
+        // for(int j = 1;j <= 5000;j++){
+        //     if(!test5(j, T5, 0)){
+        //         ++failerTime;
+        //         break;
+        //     }
+        //     if(abs(T5 - 2500) > max){
+        //         max = abs(T5 - 2500);
+        //         maxTau = j;
+        //     }
+        // }
+        std::future<bool> futures[THREADNUMBER];
+
+        for(int j = 0;j < THREADNUMBER;j++){
+            futures[j] = std::async([this, j](){return procedureA_iteration(j);});
         }
-        if(!test5(maxTau, T5, 0))
+        bool res = true;
+        for(int j = 0;j < THREADNUMBER;j++){
+            res = futures[j].get();
+        }
+        // bool res = true;
+        // for(int j = 0;j < THREADNUMBER;j++){
+        //     res &= procedureA_iteration(j);
+        // }
+        if(res == false)
+            ++failerTime;
+        if(!test5(maxTau, T5, 1))
             ++failerTime;
         if(failerTime >= 2){
             return false;
@@ -548,7 +568,7 @@ bool Tester::procedureB(int time) {
     int quantity = 100000 / (sizeof(TestNumber) * 8) + 1;
     read_real_from_file(100000 / (sizeof(TestNumber) * 8) + 1, biasA);
     biasA += quantity * 8;
-    int failerTime = 0;
+    failerTime = 0;
     if(!test6a()) {
         failerTime = 1;
     }
@@ -575,6 +595,30 @@ bool Tester::procedureB(int time) {
         return procedureB(1);
     }
     return true;
+}
+
+bool Tester::procedureA_iteration(int iterTime){
+    int T5 = 0;
+    int max = 0;
+    int maxTau = 0;
+    int i;
+    for(i = iterTime * 5000 / THREADNUMBER + 1;i <= (iterTime + 1) * 5000 / THREADNUMBER;i++){
+        if(!test5(i, T5, 0)){
+            std::cout << "test5 at iter " << iterTime << ", Number " << i << " failed" << endl;
+            // ++failerTime;
+            break;
+        }
+        if(abs(T5 - 2500) > max){
+            max = abs(T5 - 2500);
+            maxTau = i;
+        }
+    }
+    tauTex.lock();
+    if(this->maxTau < maxTau){
+        this->maxTau = maxTau;
+    }
+    tauTex.unlock();
+    return (i == (iterTime + 1) * 5000 / THREADNUMBER + 1);
 }
 
 Tester::~Tester() {

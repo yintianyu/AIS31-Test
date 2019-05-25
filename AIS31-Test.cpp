@@ -42,8 +42,14 @@ int main(void){
     // tester.Toc("Test8");
     // tester.Tic();
     tester.Tic();
-    // cout << tester.procedureA(0) << endl;
-    cout << tester.procedureB(0) << endl;
+    cout << tester.procedureA(0) << endl;
+    // cout << tester.procedureB(0) << endl;
     tester.Toc("Procedure A");
+
+    // Test
+    // tester.read_real_from_file(65536);
+    // tester.convert_48(65536);
+    // int T5;
+    // cout << tester.test5(1, T5, 0) << endl;
     return 0;
 }

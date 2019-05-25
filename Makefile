@@ -2,7 +2,8 @@
 
 SRCS=AIS31-Test.cpp Tester.cpp QRBG-lib/QRBG.cpp
 PROG=AIS31-Test.exe
-PARAM=-std=c++11
+CXXFLAGS+= -std=c++11
+LDFLAGS+= -lpthread
 ifeq ($(win32),true)
 	LDLIBRARY=-lWSock32
 else
@@ -14,10 +15,10 @@ HEADS=$(SRCS:%.cpp=%.h)
 
 default: $(PROG)
 $(PROG): $(OBJS)
-	$(CC) $(PARAM) -o $(PROG) $(OBJS) $(LDLIBRARY) -g
+	$(CC) -o $(PROG) $(OBJS) $(LDLIBRARY) -g
 
 %.o: %.c $(HEADS)
-	$(CC) $(PARAM) -c $< -o $@ -g
+	$(CC) -c $< -o $@ -g
 
 .PHONY: clean
 clean: 

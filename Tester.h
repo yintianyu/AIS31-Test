@@ -9,6 +9,8 @@
 #include "QRBG-lib/QRBG.h"
 #include <ctime>
 #include <cstdlib>
+#include <future>
+#include <mutex>
 
 typedef long long TestNumber;
 
@@ -17,6 +19,9 @@ class Tester{
     TestNumber *numbers48;
     QRBG rndService;
     clock_t start, finish;
+    int failerTime;
+    int maxTau;
+    std::mutex tauTex;
     int bitcount(TestNumber n);
     public:
     Tester();
@@ -27,7 +32,7 @@ class Tester{
         finish = clock();
         std::cout << name << " takes time: " << (double)(finish - start) / CLOCKS_PER_SEC * 1000 << "ms" << endl;
     }
-    private:
+    // private:
     void get_real_from_server(int quantity);
     void read_real_from_file(int quantity, int biasByte=0, std::string path="./data/realrandomcat.dat");
     void generate_pseudo(int quantity);
@@ -44,6 +49,7 @@ class Tester{
     bool test7a(int& biasA, int n=100000, float upBound=15.13);
     bool test7b(int& biasA, int n=100000, float upBound=15.13);
     bool test8(int L=8, int Q=2560, int K=256000);
+    bool procedureA_iteration(int iterTime);
     public:
     bool procedureA(int time=0);
     bool procedureB(int time=0);
