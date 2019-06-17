@@ -150,7 +150,7 @@ bool Tester::test2(int length, float downBound, float upBound) {
     return false;
 }
 
-bool Tester::test3(){
+bool Tester::test3(int length){
     const unsigned long long bitmap[64] = {
         0x0000000000000001, 0x0000000000000002, 0x0000000000000004, 0x0000000000000008, 0x0000000000000010, 0x0000000000000020, 0x0000000000000040, 0x0000000000000080, 
         0x0000000000000100, 0x0000000000000200, 0x0000000000000400, 0x0000000000000800, 0x0000000000001000, 0x0000000000002000, 0x0000000000004000, 0x0000000000008000, 
@@ -169,7 +169,7 @@ bool Tester::test3(){
     int idx = 0;
     int bit = 0;
     int cnt = 1;
-    for(int i = 1;i < 20000;++i){
+    for(int i = 1;i < length;++i){
         int current = (numbers[idx] & bitmap[bit]) != 0;
         if(current == state){
             ++cnt;
@@ -231,7 +231,7 @@ bool Tester::test3(){
     return result;
 }
 
-bool Tester::test4(){
+bool Tester::test4(int length){
     const unsigned long long bitmap[64] = {
         0x0000000000000001, 0x0000000000000002, 0x0000000000000004, 0x0000000000000008, 0x0000000000000010, 0x0000000000000020, 0x0000000000000040, 0x0000000000000080, 
         0x0000000000000100, 0x0000000000000200, 0x0000000000000400, 0x0000000000000800, 0x0000000000001000, 0x0000000000002000, 0x0000000000004000, 0x0000000000008000, 
@@ -246,7 +246,7 @@ bool Tester::test4(){
     int idx = 0;
     int bit = 0;
     int cnt = 1;
-    for(int i = 1;i < 20000;++i){
+    for(int i = 1;i < length;++i){
         int current = (numbers[idx] & bitmap[bit]) != 0;
         if(current == state){
             if(++cnt >= 34){

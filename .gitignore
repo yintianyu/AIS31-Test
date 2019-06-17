@@ -3,3 +3,4 @@
 *.bin
 *.ipch
 .vscode/*
+.DS_Store

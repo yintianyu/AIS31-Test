@@ -18,7 +18,7 @@ class Tester{
     TestNumber *numbers;
     TestNumber *numbers48;
     QRBG rndService;
-    clock_t start, finish;
+    timespec start, finish;
     int failerTime;
     int maxTau;
     std::mutex tauTex;
@@ -26,11 +26,11 @@ class Tester{
     public:
     Tester();
     inline void Tic(){
-        start = clock();
+        clock_gettime(CLOCK_MONOTONIC, &start);
     }
     inline void Toc(const std::string &name){
-        finish = clock();
-        std::cout << name << " takes time: " << (double)(finish - start) / CLOCKS_PER_SEC * 1000 << "ms" << endl;
+        clock_gettime(CLOCK_MONOTONIC, &finish);
+        std::cout << name << " takes time: " << (finish.tv_sec - start.tv_sec) * 1000 + (double)(finish.tv_nsec - start.tv_nsec) / 1e6 << "ms" << endl;
     }
     // private:
     void get_real_from_server(int quantity);
@@ -41,8 +41,8 @@ class Tester{
     bool test0(int quantity=65536);
     bool test1(int length=20000);
     bool test2(int length=20000, float downBound=1.03, float upBound=57.4);
-    bool test3();
-    bool test4();
+    bool test3(int length=20000);
+    bool test4(int length=20000);
     bool test5(int tao, int& T5, int time, int length=10000, float downBound=2326, float upBound=2674);
     bool test6a(int n=100000, float a=0.025);
     bool test6b(int& biasA, int n=100000, float a=0.02);

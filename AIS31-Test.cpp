@@ -2,54 +2,32 @@
 
 // 功能：AIS31的测试框架
 #include <iostream>
+#include <cstring>
 #include "Tester.h"
 
-int main(void){
+int main(int argc, char* argv[]){
+    if(argc == 1){
+        std::cout << "Please input Test Procedure" << std::endl;
+        return -1;
+    }
     Tester tester;
-    // tester.Tic();
-    // tester.read_real_from_file(65536);
-    // tester.convert_48(65536);
-    // tester.Toc("Generate Number");
-    // tester.Tic();
-    // std::cout << tester.test0(65536) << std::endl;
-    // tester.Toc("Test0");
-    // tester.Tic();
-    // std::cout << tester.test1(20000) << std::endl;
-    // tester.Toc("Test1");
-    // tester.Tic();
-    // std::cout << tester.test2() << std::endl;
-    // tester.Toc("Test2");
-    // tester.Tic();
-    // std::cout << tester.test3() << std::endl;
-    // tester.Toc("Test3");
-    // tester.Tic();
-    // std::cout << tester.test4() << std::endl;
-    // tester.Toc("Test4");
-    // tester.Tic();
-    // std::cout << tester.test5(1) << std::endl;
-    // tester.Toc("Test5");
-    // tester.Tic();
-    // std::cout << tester.test6() << std::endl;
-    // tester.Toc("Test6");
-    // tester.Tic();
-    // std::cout << tester.test7() << std::endl;
-    // tester.Toc("Test7");
-    // tester.Tic();
-    // tester.read_real_from_file(81920000, "./data/realrandomcat.dat");
-    // tester.Toc("Get from server");
-    // tester.Tic();
-    // std::cout << tester.test8() << std::endl;
-    // tester.Toc("Test8");
-    // tester.Tic();
-    tester.Tic();
-    cout << tester.procedureA(0) << endl;
-    // cout << tester.procedureB(0) << endl;
-    tester.Toc("Procedure A");
-
-    // Test
-    // tester.read_real_from_file(65536);
-    // tester.convert_48(65536);
-    // int T5;
-    // cout << tester.test5(1, T5, 0) << endl;
+    if(std::strcmp(argv[1], "ProcedureA") == 0){
+        bool res = tester.procedureA(0);
+        cout << "Procedure A Result: " << res << endl;
+    }
+    else if(std::strcmp(argv[1], "ProcedureB") == 0){
+        bool res = tester.procedureB(0);
+        cout << "Procedure B Result: " << res << endl;
+    }
+    else if(std::strcmp(argv[1], "All") == 0){
+        bool res1 = tester.procedureA(0);
+        bool res2 = tester.procedureB(0);
+        cout << "Procedure A Result: " << res1 << endl;
+        cout << "Procedure B Result: " << res2 << endl;
+    }
+    else{
+        cout << "Input Parameter Error" << std::endl;
+        return -1;
+    }
     return 0;
 }
