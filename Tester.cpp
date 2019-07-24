@@ -13,6 +13,7 @@
 #include <cstring>
 #include <thread>
 #include <functional>
+#include <unordered_set>
 
 #define THREADNUMBER (8)
 
@@ -112,6 +113,18 @@ bool Tester::test0(int quantity){
     return true;
 }
 
+bool Tester::test0_hash(int quantity){
+    std::unordered_set<long long> s;
+    for(int i = 0;i < quantity-1;++i){
+        std::unordered_set<long long>::iterator it = s.find(numbers48[i]);
+        if(it != s.end()){
+            return false;
+        }
+        s.insert(numbers48[i]);
+    }
+    return true;
+}
+
 bool Tester::test1(int length){
     int quantity = length / (sizeof(TestNumber) * 8);
     int count = 0;
@@ -122,7 +135,7 @@ bool Tester::test1(int length){
         return true;
     }
     std::cout << "T1 value error " << count << " expected 9654-10346" << std::endl;
-    return count > 9654 && count < 10346;
+    return false;
 }
 
 bool Tester::test2(int length, float downBound, float upBound) {

@@ -39,6 +39,7 @@ class Tester{
     void convert_48(int quantity);
     void read2bool(int length, int b[]);
     bool test0(int quantity=65536);
+    bool test0_hash(int quantity=65536);
     bool test1(int length=20000);
     bool test2(int length=20000, float downBound=1.03, float upBound=57.4);
     bool test3(int length=20000);

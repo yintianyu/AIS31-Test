@@ -6,28 +6,18 @@
 #include "Tester.h"
 
 int main(int argc, char* argv[]){
-    if(argc == 1){
-        std::cout << "Please input Test Procedure" << std::endl;
-        return -1;
-    }
     Tester tester;
-    if(std::strcmp(argv[1], "ProcedureA") == 0){
-        bool res = tester.procedureA(0);
-        cout << "Procedure A Result: " << res << endl;
+    tester.generate_pseudo(10000000);
+    tester.convert_48(10000000);
+    tester.Tic();
+    if(!tester.test0(10000000)){
+        std::cout << "test0 failed" << std::endl;
     }
-    else if(std::strcmp(argv[1], "ProcedureB") == 0){
-        bool res = tester.procedureB(0);
-        cout << "Procedure B Result: " << res << endl;
+    tester.Toc("Test 0");
+    tester.Tic();
+    if(!tester.test0_hash(10000000)){
+        std::cout << "test0 hash failed" << std::endl;
     }
-    else if(std::strcmp(argv[1], "All") == 0){
-        bool res1 = tester.procedureA(0);
-        bool res2 = tester.procedureB(0);
-        cout << "Procedure A Result: " << res1 << endl;
-        cout << "Procedure B Result: " << res2 << endl;
-    }
-    else{
-        cout << "Input Parameter Error" << std::endl;
-        return -1;
-    }
+    tester.Toc("Test 0 Hash");
     return 0;
 }
