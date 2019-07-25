@@ -42,6 +42,7 @@ class Tester{
     bool test0_hash(int quantity=65536);
     bool test1(int length=20000);
     bool test2(int length=20000, float downBound=1.03, float upBound=57.4);
+    bool test2_vector(int length=20000, float downBound=1.03, float upBound=57.4);
     bool test3(int length=20000);
     bool test4(int length=20000);
     bool test5(int tao, int& T5, int time, int length=10000, float downBound=2326, float upBound=2674);

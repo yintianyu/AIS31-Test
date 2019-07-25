@@ -163,6 +163,31 @@ bool Tester::test2(int length, float downBound, float upBound) {
     return false;
 }
 
+bool Tester::test2_vector(int length, float downBound, float upBound) {
+    std::vector<int> m(16, 0);
+    int squareAcc = 0;
+    int quantity = length / (sizeof(TestNumber) * 8);
+    for (int i = 0; i < quantity; i++) {
+        for (int j = 0; j < sizeof(TestNumber) * 2; ++j) {
+            char idx = (numbers[i] >> (j * 4)) & 0xf;
+            ++m[idx];
+        }
+    }
+    for (int i = 0; i < (length % (sizeof(TestNumber) * 8)) / 4; ++i) {
+        char idx = (numbers[quantity] >> (4 * i)) & 0xf;
+        ++m[idx];
+    }
+    for (const auto &e : m) {
+        squareAcc += e * e;
+    }
+    float T2 = squareAcc * 64.0 / length - length / 4;
+    if (T2 > downBound && T2 < upBound) {
+        return true;
+    }
+    std::cout << "T2 Wrong value " << T2 << ", out of range " << downBound << " ~ " << upBound << std::endl;
+    return false;
+}
+
 bool Tester::test3(int length){
     const unsigned long long bitmap[64] = {
         0x0000000000000001, 0x0000000000000002, 0x0000000000000004, 0x0000000000000008, 0x0000000000000010, 0x0000000000000020, 0x0000000000000040, 0x0000000000000080, 

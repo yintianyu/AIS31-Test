@@ -7,17 +7,17 @@
 
 int main(int argc, char* argv[]){
     Tester tester;
-    tester.generate_pseudo(10000000);
-    tester.convert_48(10000000);
+    tester.generate_pseudo(65536);
+    tester.convert_48(65536);
     tester.Tic();
-    if(!tester.test0(10000000)){
-        std::cout << "test0 failed" << std::endl;
+    if(!tester.test2()){
+        std::cout << "test2 failed" << std::endl;
     }
-    tester.Toc("Test 0");
+    tester.Toc("Test 2");
     tester.Tic();
-    if(!tester.test0_hash(10000000)){
-        std::cout << "test0 hash failed" << std::endl;
+    if(!tester.test2_vector()){
+        std::cout << "test2_vector failed" << std::endl;
     }
-    tester.Toc("Test 0 Hash");
+    tester.Toc("Test 2 vector");
     return 0;
 }
